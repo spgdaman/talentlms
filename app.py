@@ -149,11 +149,25 @@ talent()
 
 course_details, units = talent()
 
+for column in course_details.columns:
+    if column in columns:
+        options = pd.Series(["All"]).append(data[column], ignore_index=True).unique()
+        choice = st.sidebar.selectbox("Select {}.".format(column), options)
+        
+        if choice != "All":
+            data = data[data[column] == choice]
 st.title("Courses done by Staff")
 st.write(course_details)
 download_button_str = download_button(course_details, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
 st.markdown(download_button_str, unsafe_allow_html=True)
 
+for column in units.columns:
+    if column in columns:
+        options = pd.Series(["All"]).append(data[column], ignore_index=True).unique()
+        choice = st.sidebar.selectbox("Select {}.".format(column), options)
+        
+        if choice != "All":
+            data = data[data[column] == choice]
 st.title("Course Completion Status")
 st.write(units)
 download_button_str = download_button(units, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
