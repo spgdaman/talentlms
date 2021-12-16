@@ -149,7 +149,7 @@ talent()
 course_details, units = talent()
 
 course_name = pd.Series(["All"]).append(course_details["course_name"], ignore_index=True).unique()
-course_name_choice = st.sidebar.selectbox('Select course:', course_name)
+course_name_choice = st.selectbox('Select course:', course_name, key=1)
 if course_name_choice == "All":
     st.title("Courses done by Staff")
     st.write(course_details)
@@ -162,7 +162,16 @@ elif course_name_choice != "All":
     download_button_str = download_button(course_name_filter, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
     st.markdown(download_button_str, unsafe_allow_html=True)
 
-st.title("Units Completion Status")
-st.write(units)
-download_button_str = download_button(units, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
-st.markdown(download_button_str, unsafe_allow_html=True)
+unit_name = pd.Series(["All"]).append(units["course_name"], ignore_index=True).unique()
+unit_name_choice = st.selectbox('Select course:', course_name, key=2)
+if unit_name_choice == "All":
+    st.title("Units Completion Status")
+    st.write(units)
+    download_button_str = download_button(units, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
+elif unit_name_choice != "All":
+    unit_name_filter = units.loc[units['course_name'] == unit_name_choice]
+    st.title("Units Completion Status")
+    st.write(unit_name_filter)
+    download_button_str = download_button(unit_name_filter, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
