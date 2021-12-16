@@ -151,6 +151,10 @@ course_details, units = talent()
 
 st.title("Courses done by Staff")
 st.write(course_details)
+download_button_str = download_button(course_details, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
+st.markdown(download_button_str, unsafe_allow_html=True)
 
 st.title("Course Completion Status")
 st.write(units)
+download_button_str = download_button(units, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
+st.markdown(download_button_str, unsafe_allow_html=True)
