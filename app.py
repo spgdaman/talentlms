@@ -2,6 +2,7 @@ import talentlms
 import streamlit as st
 import pandas as pd
 import numpy as np
+from download import download_button
 
 st.set_page_config(layout='wide')
  
@@ -115,7 +116,6 @@ def talent():
                 pass
     
     # Course completion status
-    st.title("Course Completion Status")
     units = pd.DataFrame(units)
     units = pd.merge(
         units,
