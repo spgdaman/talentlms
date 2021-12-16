@@ -80,7 +80,7 @@ def talent():
 
                 progress = {}
 
-                progress.update({'user_id': user})
+                # progress.update({'user_id': user})
                 progress.update({'course_id': course_id})
                 progress.update({'role': role})
                 progress.update({'enrolled_on': enrolled_on})
@@ -129,7 +129,6 @@ def talent():
     del units['download_url']
     del units['unique_id']
     column_names = [
-        "user_id",
         "tl_id",
         "course_id",
         "course_name",
@@ -149,26 +148,21 @@ talent()
 
 course_details, units = talent()
 
-for column in course_details.columns:
-    if column in columns:
-        options = pd.Series(["All"]).append(data[column], ignore_index=True).unique()
-        choice = st.sidebar.selectbox("Select {}.".format(column), options)
-        
-        if choice != "All":
-            data = data[data[column] == choice]
-st.title("Courses done by Staff")
-st.write(course_details)
-download_button_str = download_button(course_details, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
-st.markdown(download_button_str, unsafe_allow_html=True)
+course_name = pd.Series(["All"]).append(course_details["course_name"], ignore_index=True).unique()
+course_name_choice = st.sidebar.selectbox('Select course:', course_name)
+if course_name_choice == "All":
+    st.title("Courses done by Staff")
+    st.write(course_details)
+    download_button_str = download_button(course_details, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
+elif course_name_choice != "All":
+    course_name_filter = course_details.loc[course_details['course_name'] == course_name_choice]
+    st.title("Courses done by Staff")
+    st.write(course_name_filter)
+    download_button_str = download_button(course_name_filter, f"Courses done by Staff.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
 
-for column in units.columns:
-    if column in columns:
-        options = pd.Series(["All"]).append(data[column], ignore_index=True).unique()
-        choice = st.sidebar.selectbox("Select {}.".format(column), options)
-        
-        if choice != "All":
-            data = data[data[column] == choice]
-st.title("Course Completion Status")
+st.title("Units Completion Status")
 st.write(units)
 download_button_str = download_button(units, f"Course Completion Status.csv", 'Download CSV', pickle_it=False)
 st.markdown(download_button_str, unsafe_allow_html=True)
