@@ -23,7 +23,7 @@ def talent():
     users = users['custom_field_4'].unique()
     users = users.tolist()
     users.remove(None)
-    users = users[:10]
+    # users = users[:10]
     # print(users)
 
     course_certification = []
