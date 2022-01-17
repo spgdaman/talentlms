@@ -23,7 +23,7 @@ def talent():
     users = users['custom_field_4'].unique()
     users = users.tolist()
     users.remove(None)
-    # users = users[:10]
+    users = users[:100]
     # print(users)
 
     course_certification = []
@@ -48,12 +48,10 @@ def talent():
                     value.update({'email':email})
                     course_certification.append(value)
 
-    return course_details
-
-    # # Courses taken by staff
-    # # st.title("Courses done by Staff")
-    # course_details = pd.DataFrame(course_certification)
-    # # st.dataframe(course_details)
+    # Courses taken by staff
+    st.title("Courses done by Staff")
+    course_details = pd.DataFrame(course_certification)
+    st.dataframe(course_details)
 
     # users = course_details['tl_id'].tolist()
     # users = unique(users)
