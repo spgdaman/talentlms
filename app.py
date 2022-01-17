@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from download import download_button
+import datetime
+
+x = datetime.datetime.now()
 
 st.set_page_config(layout='wide')
  
@@ -23,7 +26,7 @@ def talent():
     users = users['custom_field_4'].unique()
     users = users.tolist()
     users.remove(None)
-    users = users[:100]
+    # users = users[:200]
     # print(users)
 
     course_certification = []
@@ -52,6 +55,9 @@ def talent():
     st.title("Courses done by Staff")
     course_details = pd.DataFrame(course_certification)
     st.dataframe(course_details)
+
+    download_button_str = download_button(course_details, f"Courses Enrolled {x}.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
 
     # users = course_details['tl_id'].tolist()
     # users = unique(users)
