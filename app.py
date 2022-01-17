@@ -26,7 +26,7 @@ def talent():
     users = users['custom_field_4'].unique()
     users = users.tolist()
     users.remove(None)
-    # users = users[:200]
+    users = users[:20]
     # print(users)
 
     course_certification = []
@@ -45,7 +45,7 @@ def talent():
             certifications = custom_field[f"{i}"]['certifications']
             if len(certifications) >= 1:
                 for value in certifications:
-                    value.update({'tl_id':id})
+                    value.update({'user_id':id})
                     value.update({'first_name':first_name})
                     value.update({'last_name':last_name})
                     value.update({'email':email})
@@ -54,10 +54,40 @@ def talent():
     # Courses taken by staff
     st.title("Courses done by Staff")
     course_details = pd.DataFrame(course_certification)
+    course_details['full_name'] = course_details['first_name'] + " " + course_details['last_name']
+
+    # Filter by user
+    # username = course_details['full_name'].drop_duplicates()
+    # username = st.sidebar.selectbox('Select staff name:', username)
+    # course_details = course_details[course_details['full_name'] == username]
+
+    columns = ["course_name","full_name"]
+
+    for column in course_details.columns:
+        if column in columns:
+            options = pd.Series(["All"]).append(course_details[column], ignore_index=True).unique()
+            choice = st.sidebar.selectbox("Select {}.".format(column), options)
+            
+            if choice != "All":
+                course_details = course_details[course_details[column] == choice]
+
     st.dataframe(course_details)
 
     download_button_str = download_button(course_details, f"Courses Enrolled {x}.csv", 'Download CSV', pickle_it=False)
     st.markdown(download_button_str, unsafe_allow_html=True)
+
+    # filter
+    user = st.sidebar.text_input("Enter user_id")
+    course = st.sidebar.text_input("Enter course_id")
+
+    user_course_status = lms.get_user_status_in_course(int(user),int(course))
+    units = user_course_status.get('units')
+    st.dataframe(units)
+
+    # if type(user) and type(course) == 'str':
+    #     user_course_status = lms.get_user_status_in_course(int(user),int(course))
+    #     st.write(user_course_status)
+    # user_course_status = lms.get_user_status_in_course(int(user),int(course))
 
     # users = course_details['tl_id'].tolist()
     # users = unique(users)
