@@ -26,7 +26,7 @@ def talent():
     users = users['custom_field_4'].unique()
     users = users.tolist()
     users.remove(None)
-    users = users[:20]
+    # users = users[:20]
     # print(users)
 
     course_certification = []
@@ -52,7 +52,6 @@ def talent():
                     course_certification.append(value)
 
     # Courses taken by staff
-    st.title("Courses done by Staff")
     course_details = pd.DataFrame(course_certification)
     course_details['full_name'] = course_details['first_name'] + " " + course_details['last_name']
 
@@ -178,14 +177,19 @@ st.markdown(download_button_str, unsafe_allow_html=True)
 API_KEY = 'TC7azJYg1UAcBMSvSiN4eEuldImd29'
 lms = talentlms.api('pendahealth.talentlms.com', API_KEY)
 
-user = st.sidebar.text_input("Enter user_id")
-course = st.sidebar.text_input("Enter course_id")
-
-user_course_status = lms.get_user_status_in_course(int(user),int(course))
-units = user_course_status.get('units')
+user = st.text_input("Enter user_id")
+course = st.text_input("Enter course_id")
 
 st.header("Course Units Completion Status")
-st.dataframe(units)
+if user or course != "":
+    user_course_status = lms.get_user_status_in_course(int(user),int(course))
+    units = user_course_status.get('units')
+    units = pd.DataFrame(units)
+    st.write(units)
+    download_button_str = download_button(units, f"Course Units Completed {x}.csv", 'Download CSV', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
+else:
+    st.warning("Please enter the user and course id of the staff")
 
 # course_details, units = talent()
 
