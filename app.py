@@ -56,33 +56,7 @@ def talent():
     course_details = pd.DataFrame(course_certification)
     course_details['full_name'] = course_details['first_name'] + " " + course_details['last_name']
 
-    # Filter by user
-    # username = course_details['full_name'].drop_duplicates()
-    # username = st.sidebar.selectbox('Select staff name:', username)
-    # course_details = course_details[course_details['full_name'] == username]
-
-    columns = ["course_name","full_name"]
-
-    for column in course_details.columns:
-        if column in columns:
-            options = pd.Series(["All"]).append(course_details[column], ignore_index=True).unique()
-            choice = st.sidebar.selectbox("Select {}.".format(column), options)
-            
-            if choice != "All":
-                course_details = course_details[course_details[column] == choice]
-
-    st.dataframe(course_details)
-
-    download_button_str = download_button(course_details, f"Courses Enrolled {x}.csv", 'Download CSV', pickle_it=False)
-    st.markdown(download_button_str, unsafe_allow_html=True)
-
-    # filter
-    user = st.sidebar.text_input("Enter user_id")
-    course = st.sidebar.text_input("Enter course_id")
-
-    user_course_status = lms.get_user_status_in_course(int(user),int(course))
-    units = user_course_status.get('units')
-    st.dataframe(units)
+    return course_details
 
     # if type(user) and type(course) == 'str':
     #     user_course_status = lms.get_user_status_in_course(int(user),int(course))
@@ -181,6 +155,37 @@ def talent():
     # return course_details, units
 
 talent()
+
+data = talent()
+
+# Filter by user
+columns = ["course_name","full_name"]
+
+for column in data.columns:
+    if column in columns:
+        options = pd.Series(["All"]).append(data[column], ignore_index=True).unique()
+        choice = st.sidebar.selectbox("Select {}.".format(column), options)
+        
+        if choice != "All":
+            data = data[data[column] == choice]
+st.header("Courses enrolled by Staff")
+st.dataframe(data)
+
+download_button_str = download_button(data, f"Courses Enrolled {x}.csv", 'Download CSV', pickle_it=False)
+st.markdown(download_button_str, unsafe_allow_html=True)
+
+# filter course completion details
+API_KEY = 'TC7azJYg1UAcBMSvSiN4eEuldImd29'
+lms = talentlms.api('pendahealth.talentlms.com', API_KEY)
+
+user = st.sidebar.text_input("Enter user_id")
+course = st.sidebar.text_input("Enter course_id")
+
+user_course_status = lms.get_user_status_in_course(int(user),int(course))
+units = user_course_status.get('units')
+
+st.header("Course Units Completion Status")
+st.dataframe(units)
 
 # course_details, units = talent()
 
